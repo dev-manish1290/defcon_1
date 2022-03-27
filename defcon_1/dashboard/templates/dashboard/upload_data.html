@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<style>
+.center { 
+
+margin: auto; 
+background-color: #e9ecef;
+width: 60%; 
+border: 3px solid #e9ecef; 
+padding: 60px; 
+}
+
+
+</style>
+
+
+
+
+<div  class="center">
+  <form text-align: center; method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+      {{ form|crispy }}
+    </table>
+    <button type="submit" class="btn btn-success">Upload</button>
+  </form>
+</div>
+
+
+
+
+{% endblock %}

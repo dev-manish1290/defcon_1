@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% csrf_token %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+<div id='loader' style='display: none;'>
+
+</div>
+
+<table id="votes_list" class="display", style="width:100%">
+     <thead>
+         <tr>
+             
+            <th>Symbol Name</th>
+             <th>Series</th>
+             <th>ISIN</th>
+
+         </tr>
+     </thead>
+     <tbody>
+        {% for data in upload_json %}
+            <tr>
+                 
+                <th><a href="{% url 'symbol' data.id %}">{{data.symbol_name}}</a></th>
+                <th>{{ data.series}}</th>
+                <th>{{ data.isin}}</th>
+                {% csrf_token %}
+
+            </tr>
+        {% endfor %}
+     </tbody>
+</table>
+<div class="pag" style="position: absolute; right: 50px;">
+    {% if is_paginated %}
+    <ul class="pagination";>
+    {% if page_obj.has_previous %}
+        <li>
+            <span><a href="?page={{ page_obj.previous_page_number }}">Previous</a></span>
+        </li>
+    {% endif %}
+        <li class="">
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+        </li>
+    {% if page_obj.has_next %}
+        <li>
+            <span><a href="?page={{ page_obj.next_page_number }}">Next</a></span>
+        </li>
+    {% endif %}
+    </ul>
+    {% endif %}
+    </div>
+
+{% endblock %}
