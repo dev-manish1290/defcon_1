@@ -1,4 +1,4 @@
-# defcon_1
+# Defcon
 Data driven web application
 
 This project is created for study purpose, you need to copy the code deploy to your local machine. 
