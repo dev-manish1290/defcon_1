@@ -5,64 +5,93 @@
 {% csrf_token %}
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-
-<div id='loader' style='display: none;'>
-
+<div>
+    <canvas id="myChart"></canvas>
 </div>
 
 <table id="votes_list" class="display", style="width:100%">
-     <thead>
-         <tr>
-            <th>Date</th> 
-            <th>Symbol Name</th>
-             <th>Open</th>
-             <th>High</th>
-             <th>Close</th>
-             <th>Last</th>
-             <th>Prev Close</th>
-             <th>Total Trade Qty</th>
-             <th>Total Trade Value</th>
-             <th>Total Trade</th>
+    <thead>
+        <tr>
+           <th>Date</th> 
+           <th>Symbol Name</th>
+            <th>Open</th>
+            <th>High</th>
+            <th>Close</th>
+            <th>Last</th>
+            <th>Prev Close</th>
+            <th>Total Trade Qty</th>
+            <th>Total Trade Value</th>
+            <th>Total Trade</th>
 
-         </tr>
-     </thead>
-     <tbody>
-        {% for data in symbol_data %}
-            <tr>
-                <th>{{data.timestamp}}</th>
-                <th>{{data.symbol}}</th>
-                <th>{{ data.open}}</th>
-                <th>{{ data.high}}</th>
-                <th>{{ data.close}}</th>
-                <th>{{ data.last}}</th>
-                <th>{{ data.prev_close}}</th>
-                <th>{{ data.tot_trd_qty}}</th>
-                <th>{{ data.tot_trd_val}}</th>
-                <th>{{ data.tot_trd}}</th>
-                {% csrf_token %}
+        </tr>
+    </thead>
+    <tbody>
+       {% for data in symbol_data %}
+           <tr>
+               <th>{{data.timestamp}}</th>
+               <th>{{data.symbol}}</th>
+               <th>{{ data.open}}</th>
+               <th>{{ data.high}}</th>
+               <th>{{ data.close}}</th>
+               <th>{{ data.last}}</th>
+               <th>{{ data.prev_close}}</th>
+               <th>{{ data.tot_trd_qty}}</th>
+               <th>{{ data.tot_trd_val}}</th>
+               <th>{{ data.tot_trd}}</th>
+               {% csrf_token %}
 
-            </tr>
-        {% endfor %}
-     </tbody>
+           </tr>
+       {% endfor %}
+    </tbody>
 </table>
 <div class="pag" style="position: absolute; right: 50px;">
-    {% if is_paginated %}
-    <ul class="pagination";>
-    {% if page_obj.has_previous %}
-        <li>
-            <span><a href="?page={{ page_obj.previous_page_number }}">Previous</a></span>
-        </li>
-    {% endif %}
-        <li class="">
-            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
-        </li>
-    {% if page_obj.has_next %}
-        <li>
-            <span><a href="?page={{ page_obj.next_page_number }}">Next</a></span>
-        </li>
-    {% endif %}
-    </ul>
-    {% endif %}
-    </div>
+   {% if is_paginated %}
+   <ul class="pagination";>
+   {% if page_obj.has_previous %}
+       <li>
+           <span><a href="?page={{ page_obj.previous_page_number }}">Previous</a></span>
+       </li>
+   {% endif %}
+       <li class="">
+           <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+       </li>
+   {% if page_obj.has_next %}
+       <li>
+           <span><a href="?page={{ page_obj.next_page_number }}">Next</a></span>
+       </li>
+   {% endif %}
+   </ul>
+   {% endif %}
+</div>
+
+<script>
+    const labels = "{{ symbol_date|safe }}";
+    const close = "{{ symbol_close|safe }}";
+    var a = labels.replace(/'/g, '"');
+    a = JSON.parse(a);
+    var b = close.replace(/'/g, '"');
+    b = JSON.parse(b)
+    const data = {
+      labels: a,
+      datasets: [{
+        label: "{{ symbol_name|safe }}",
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        data: b,
+      }]
+    };
+  
+    const config = {
+      type: 'line',
+      data: data,
+      options: {}
+    };
+  </script>
+  <script>
+    const myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
+  </script>
 
 {% endblock %}

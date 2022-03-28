@@ -76,6 +76,8 @@ class NseSymbolListView(ListView):
 class NSESymbolDetailView(View):
     def get(self, request, *args, **kwargs):
         symbol_data = NSEDailyData.objects.filter(symbol_id = kwargs['pk'])
-        context = {'symbol_data': symbol_data}
+        symbol_date = [x.timestamp.strftime("%Y-%m-%d") for x in symbol_data]
+        symbol_close = [x.close for x in symbol_data]
+        context = {'symbol_data': symbol_data, 'symbol_date':symbol_date, 'symbol_close':symbol_close,'symbol_name':symbol_data[0].symbol}
         return render(request, 'dashboard/nse_symbol_detail.html', context)
 
